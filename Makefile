@@ -12,7 +12,7 @@ LFSDIR=luafilesystem
 
 # set this to your ARM cross compiler:
 
-CC:=arm-unknown-linux-gnueabi-gcc
+CC:=gcc
 HOSTCC:=gcc
 
 CFLAGS:=-O0 -g
@@ -23,8 +23,8 @@ CFLAGS:=-O0 -g
 
 ifdef EMULATE_READER
 CC:=$(HOSTCC)
-EMULATE_READER_W?=824
-EMULATE_READER_H?=1200
+EMULATE_READER_W?=800
+EMULATE_READER_H?=500
 EMU_CFLAGS?=$(shell sdl-config --cflags)
 EMU_CFLAGS+= -DEMULATE_READER \
 	     -DEMULATE_READER_W=$(EMULATE_READER_W) \
@@ -95,11 +95,11 @@ fetchthirdparty:
 	-rmdir lua
 	-rm lua
 	git clone git://git.ghostscript.com/mupdf.git
-	( cd mupdf ; wget http://www.mupdf.com/download/mupdf-thirdparty.zip && unzip mupdf-thirdparty.zip; patch -p1 < ../mupdf-64M-memory-limit.diff )
+	( cd mupdf ; wget http://www.mupdf.com/download/mupdf-thirdparty.zip && unzip mupdf-thirdparty.zip )
 	wget http://www.lua.org/ftp/lua-5.1.4.tar.gz && tar xvzf lua-5.1.4.tar.gz && ln -s lua-5.1.4 lua
 	wget "http://lua.sqlite.org/index.cgi/zip/lsqlite3_svn08.zip?uuid=svn_8" && unzip "lsqlite3_svn08.zip?uuid=svn_8"
 	wget "http://sqlite.org/sqlite-amalgamation-3070900.zip" && unzip sqlite-amalgamation-3070900.zip
-	git clone https://github.com/keplerproject/luafilesystem.git
+	git clone git://github.com/keplerproject/luafilesystem.git
 
 clean:
 	-rm -f *.o kpdfview
@@ -129,6 +129,5 @@ thirdparty: $(MUPDFLIBS) $(THIRDPARTYLIBS) $(LUALIBS)
 
 install:
 	# install to kindle using USB networking
-	scp kpdfview *.lua root@192.168.2.2:/mnt/us/test/
-	scp launchpad/* root@192.168.2.2:/mnt/us/launchpad/
-
+	scp kpdfview *.lua root@192.168.0.22:/mnt/us/kpdfview/
+	scp launchpad/* root@192.168.0.22:/mnt/us/launchpad/
